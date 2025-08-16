@@ -3,15 +3,15 @@
 ROS2 플릿 매니저 (Python) — 동작 가능한 베이스라인
 ===============================================
 
-여러 대의 Nav2 로봇(TurtleBot3 등)을 중앙에서 제어하기 위한 **동작 가능한** 참고 구현입니다.
+여러 대의 Nav2 로봇(TurtleBot3 등)을 중앙에서 제어하기 위한 동작 가능한 구현입니다.
 - Nav2 목표 전송(NavigateToPose 액션)
-- 작업 큐 & 그리디 할당(ETA 기반 기본 정책)
+- 작업 큐 & 그리디 할당
 - 간단한 헤드온(정면 교차) 완화 휴리스틱
 - 진행 모니터링(정체/타임아웃 → 취소/재할당)
 - 실습/대회용 입력: `required_sites_yaml`(반드시 들러야 하는 위치들)
 - 드라이런 모드: `dry_run=True`면 Nav2에 실제 goal을 보내지 않고 로직만 검증
 
-※ 강의/대회에서는 Allocator/Sequencing을 교체하거나 TODO로 바꿔 실습 과제로 줄 수 있습니다.
+※ 강의에서는 Allocator/Sequencing을 교체가능
 """
 from __future__ import annotations
 
@@ -569,7 +569,7 @@ def sequencing_baseline(required_sites: List[Task], robots: List[RobotAgent]) ->
 
 
 # ------------------------------
-# 헬퍼 함수 이 함수들을 사용하여
+# 헬퍼 함수 이 함수들을 사용하여 sequencing, allocator 개선 할수있음음
 # ------------------------------
 
 def quat_to_yaw(q: Quaternion) -> float:
