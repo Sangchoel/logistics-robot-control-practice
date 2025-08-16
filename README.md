@@ -1,50 +1,29 @@
-# ROS2 Humble Course Workspace
-포함: AWS Robomaker Warehouse World, TB3 멀티로봇, Gazebo Waypoint Follower(C++), Multi Robot Controller(Python)
+# Logistics Robot Control Practice
 
-## 요구사항
-- Ubuntu 22.04 + ROS 2 Humble + Gazebo classic 11
-- 디스크 10GB+, RAM 8GB+ 권장
-- (권장) NVIDIA 드라이버 설치, Xorg 세션
+이 저장소는 물류 로봇 제어 실습을 위한 워크스페이스입니다.  
+아래 과정을 따라 환경을 준비하세요.
 
 ---
 
-## 설치 (원클릭)
+## 1. 워크스페이스 클론 및 부트스트랩
+
 ```bash
 git clone https://github.com/Sangchoel/logistics-robot-control-practice.git
 cd logistics-robot-control-practice
 ./bootstrap.sh
 
-환경변수 설정(.bashrc)
+2. 환경 변수 설정 (.bashrc)
 
-아래 블록은 터미널에서 복붙하여 .bashrc에 추가하세요.
-⚠️ source ~/.bashrc는 .bashrc 파일 안에 넣지 말고, 추가 저장 후 터미널에서 실행하세요.
+~/.bashrc 맨 아래에 다음 내용을 추가합니다:
 
-# ===== ROS 2 Humble =====
-if [ -f /opt/ros/humble/setup.bash ]; then
-  source /opt/ros/humble/setup.bash
-fi
-
-# ===== Gazebo 11 기본 셋업(기본 경로/모델 등록) =====
-if [ -f /usr/share/gazebo-11/setup.sh ]; then
-  source /usr/share/gazebo-11/setup.sh
-fi
-
-# ===== 실습 워크스페이스 =====
+# ----------------- Logistics Robot Control Practice -----------------
+export TURTLEBOT3_MODEL=waffle
 export LRC_WS="$HOME/logistics-robot-control-practice"
 
-# (있으면) 워크스페이스 overlay도 로드
-if [ -f "$LRC_WS/install/setup.bash" ]; then
-  source "$LRC_WS/install/setup.bash"
-fi
-
-# 옵션: TB3 모델
-export TURTLEBOT3_MODEL=waffle
-
-# ===== AWS Warehouse World 경로를 '기본값 뒤에 추가' =====
-# 설치 prefix (ros2가 먼저 source돼 있어야 동작)
+# --------- Gazebo 경로 추가 ----------
 _PKGPFX="$(ros2 pkg prefix aws_robomaker_small_warehouse_world 2>/dev/null || true)"
 
-# RESOURCE_PATH: 패키지 루트(share) 추가
+# RESOURCE_PATH: 패키지 루트 추가
 if [ -d "$LRC_WS/src/aws-robomaker-small-warehouse-world" ]; then
   export GAZEBO_RESOURCE_PATH="${GAZEBO_RESOURCE_PATH:+$GAZEBO_RESOURCE_PATH:}$LRC_WS/src/aws-robomaker-small-warehouse-world"
 fi
@@ -60,28 +39,25 @@ if [ -n "$_PKGPFX" ] && [ -d "$_PKGPFX/share/aws_robomaker_small_warehouse_world
   export GAZEBO_MODEL_PATH="${GAZEBO_MODEL_PATH:+$GAZEBO_MODEL_PATH:}$_PKGPFX/share/aws_robomaker_small_warehouse_world/models"
 fi
 
-# OGRE 셰이더/미디어 (RTShaderLib 오류 예방)
-if [ -d /usr/share/OGRE/Media ]; then
-  _OGRE_ADD="/usr/share/OGRE/Media:/usr/share/OGRE/Media/RTShaderLib"
-  export OGRE_RESOURCE_PATH="${OGRE_RESOURCE_PATH:+$OGRE_RESOURCE_PATH:}${_OGRE_ADD}"
-fi
+# OGRE 셰이더/미디어 경로 (Shader 에러 방지)
+export OGRE_RESOURCE_PATH="${OGRE_RESOURCE_PATH:+$OGRE_RESOURCE_PATH:}/usr/share/OGRE/Media:/usr/share/OGRE/Media/RTShaderLib"
 
-# 로케일 이슈(소수점) 회피 (선택)
+# 로케일 이슈 방지 (소수점 문제)
 export LC_NUMERIC=C
 
+설정 후 적용:
 
-적용 및 검증
-
-# 새 터미널 열거나, 현재 터미널에서
 source ~/.bashrc
 
-# 경로 확인(비어있지 않아야 정상)
-echo "$GAZEBO_RESOURCE_PATH"
-echo "$GAZEBO_MODEL_PATH"
-echo "$OGRE_RESOURCE_PATH"
+3. 빌드
 
-# 월드 직접 실행(설치 prefix 사용)
-gazebo --verbose "$(ros2 pkg prefix aws_robomaker_small_warehouse_world)/share/aws_robomaker_small_warehouse_world/worlds/no_roof_small_warehouse/no_roof_small_warehouse.world"
+cd $LRC_WS
+colcon build --symlink-install
 
-# 또는 ROS2 launch
-ros2 launch aws_robomaker_small_warehouse_world no_roof_small_warehouse.launch.py
+4. 실행
+
+예시: Gazebo 시뮬레이터 실행
+
+ros2 launch turtlebot3_gazebo turtlebot3_house.launch.py
+
+(실습 환경에 맞게 런치파일 선택)
