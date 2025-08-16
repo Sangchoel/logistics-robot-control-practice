@@ -2,18 +2,22 @@
 포함: AWS Robomaker Warehouse World, TB3 멀티로봇, Gazebo Waypoint Follower(C++), Multi Robot Controller(Python)
 
 ## 요구사항
-- Ubuntu 22.04 + ROS 2 Humble + gazebo classic11
+- Ubuntu 22.04 + ROS 2 Humble + Gazebo classic 11
 - 디스크 10GB+, RAM 8GB+ 권장
+- (권장) NVIDIA 드라이버 설치, Xorg 세션
 
-## 설치(원클릭)
+---
+
+## 설치 (원클릭)
 ```bash
 git clone https://github.com/Sangchoel/logistics-robot-control-practice.git
 cd logistics-robot-control-practice
 ./bootstrap.sh
 
-##빌드후
-gedit ~/.bashrc 에서 map model, world 경로 설정
+환경변수 설정(.bashrc)
 
+아래 블록은 터미널에서 복붙하여 .bashrc에 추가하세요.
+⚠️ source ~/.bashrc는 .bashrc 파일 안에 넣지 말고, 추가 저장 후 터미널에서 실행하세요.
 
 # ===== ROS 2 Humble =====
 if [ -f /opt/ros/humble/setup.bash ]; then
@@ -65,15 +69,19 @@ fi
 # 로케일 이슈(소수점) 회피 (선택)
 export LC_NUMERIC=C
 
-## 경로 설정 검사 및 world 실행
+
+적용 및 검증
+
+# 새 터미널 열거나, 현재 터미널에서
 source ~/.bashrc
+
+# 경로 확인(비어있지 않아야 정상)
 echo "$GAZEBO_RESOURCE_PATH"
 echo "$GAZEBO_MODEL_PATH"
 echo "$OGRE_RESOURCE_PATH"
 
-# 직접 월드 열기
+# 월드 직접 실행(설치 prefix 사용)
 gazebo --verbose "$(ros2 pkg prefix aws_robomaker_small_warehouse_world)/share/aws_robomaker_small_warehouse_world/worlds/no_roof_small_warehouse/no_roof_small_warehouse.world"
 
 # 또는 ROS2 launch
 ros2 launch aws_robomaker_small_warehouse_world no_roof_small_warehouse.launch.py
-
