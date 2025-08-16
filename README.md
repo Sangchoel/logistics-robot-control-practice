@@ -7,7 +7,8 @@
 
 ## 설치(원클릭)
 ```bash
-git clone https://github.com/Sangchoel/ros2-humble-course.git
-cd ros2-humble-course
+git clone https://github.com/Sangchoel/logistics-robot-control-practice.git
+cd logistics-robot-control-practice
 ./bootstrap.sh
+
 
