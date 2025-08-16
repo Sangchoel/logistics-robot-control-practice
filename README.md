@@ -7,7 +7,7 @@
 
 ## 설치(원클릭)
 ```bash
-git clone https://github.com/<YOUR_ORG>/ros2-humble-course.git
+git clone https://github.com/Sangchoel/ros2-humble-course.git
 cd ros2-humble-course
 ./bootstrap.sh
 
