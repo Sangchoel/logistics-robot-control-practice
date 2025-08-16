@@ -1,0 +1,10 @@
+multi_robot_controller:
+  ros__parameters:
+    robot_namespaces: [tb1, tb2, tb3]
+    # robot_namespaces: [tb1, tb2, tb3, tb4]
+    allocation_policy: 'eta'
+    nominal_speed_mps: 0.25
+    stuck_timeout_sec: 20.0
+    goal_timeout_sec: 180.0
+    coordination_radius_m: 0.8
+    tasks_yaml_path: ''

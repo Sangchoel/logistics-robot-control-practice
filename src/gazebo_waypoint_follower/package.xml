@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>gazebo_waypoint_follower</name>
+  <version>0.0.1</version>
+  <description>Gazebo Classic waypoint follower plugin (LiDAR-visible pedestrian proxy).</description>
+  <maintainer email="you@example.com">you</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>gazebo</build_depend>
+  <exec_depend>gazebo</exec_depend>
+</package>
+

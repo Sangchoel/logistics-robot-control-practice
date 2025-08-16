@@ -1,0 +1,11 @@
+- id: A1
+  x: 1.0
+  y: 2.0
+  yaw_deg: 90
+  priority: 5
+- id: B1
+  x: -0.5
+  y: 3.2
+  yaw_deg: 0
+  priority: 1
+  deadline_sec: 300
