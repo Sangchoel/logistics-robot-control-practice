@@ -7,11 +7,9 @@ ROS 2 Humble + Gazebo Classic 11 기반 로봇 제어 실습 환경
 ## 1. 클론 & 빌드
 
 ```bash
-git clone https://github.com/Sangcheol/logistics-robot-control-practice.git
+git clone https://github.com/Sangchoel/logistics-robot-control-practice.git
 cd logistics-robot-control-practice
-colcon build
-
-
+./bootstrap.sh
 ```
 
 
