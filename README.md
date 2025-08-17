@@ -1,6 +1,6 @@
 # Logistics Robot Control Practice
 
-ROS 2 Humble + Gazebo Classic 11 기반 로봇 제어 실습 환경  
+ROS 2 Humble + Gazebo Classic 11 기반 다중 로봇 제어 실습 환경  
 
 ---
 
