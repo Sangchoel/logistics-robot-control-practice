@@ -7,16 +7,9 @@ ROS 2 Humble + Gazebo Classic 11 기반 로봇 제어 실습 환경
 ## 1. 클론 & 빌드
 
 ```bash
-# 워크스페이스 생성
-mkdir -p ~/logistics-robot-control-practice/src
-cd ~/logistics-robot-control-practice/src
 
-# 예시: AWS Robomaker Small Warehouse World 클론
-git clone https://github.com/aws-robomaker/aws-robomaker-small-warehouse-world.git
 
-# 빌드
-cd ~/logistics-robot-control-practice
-colcon build --symlink-install
+
 ```
 
 
