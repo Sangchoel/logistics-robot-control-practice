@@ -63,9 +63,7 @@ source ~/.bashrc
 
 ```bash
 # Gazebo에서 창고 월드 실행
-ros2 launch aws_robomaker_small_warehouse_world warehouse.launch.py
+ros2 launch turtlebot3_multi_robot gazebo_multi_nav2_world.launch.py
 
-# TurtleBot3 시뮬레이션 실행 (예시)
-ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
-
-```
+# 멀티로봇 제어 노드 실행
+ros2 run multi_robot_controller multi_robot_controller --ros-args   -p robot_namespaces:="[tb1, tb2, tb3, tb4]"   -p required_sites_yaml:="/home/osc/robot_ws/src/multi_robot_controller/required_sites.yaml"   -p dry_run:=false```
