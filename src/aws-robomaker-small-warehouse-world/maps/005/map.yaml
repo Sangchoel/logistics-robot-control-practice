@@ -1,8 +1,3 @@
-image: map_rotated.png
-resolution: 0.050000
-origin: [-7.000, -10.500000, 0.000000]
-negate: 0
-occupied_thresh: 0.65
-free_thresh: 0.196
-
-# -3.071 3.583
+version https://git-lfs.github.com/spec/v1
+oid sha256:a73d9351e9a5f5e6f95e8d37a90279b2014e3106fe0f3edcfef7afdad4ca9bbc
+size 150

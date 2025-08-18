@@ -1,7 +1,3 @@
-image: map.pgm
-resolution: 0.020000
-origin: [-17.300000, -18.800000, 0.000000]
-negate: 0
-occupied_thresh: 0.65
-free_thresh: 0.196
-
+version https://git-lfs.github.com/spec/v1
+oid sha256:97938b91cdd7ba124d4babaf43dc900ce069b08aad9834474757a16bed384728
+size 131
