@@ -62,7 +62,11 @@ source ~/.bashrc
 ## 3. 실행 예시
 
 ```bash
-# Gazebo에서 창고 월드 실행
+
+# map 확인
+ros2 launch aws_robomaker_small_warehouse_world no_roof_small_warehouse.launch.py 
+
+# map 로딩 & 멀티로봇 스폰
 ros2 launch turtlebot3_multi_robot gazebo_multi_nav2_world.launch.py
 
 # 멀티로봇 제어 노드 실행
