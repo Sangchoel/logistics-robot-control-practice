@@ -74,7 +74,7 @@ def generate_launch_description():
         turtlebot3_multi_robot, 'urdf', 'turtlebot3_' + TURTLEBOT3_MODEL + '.urdf'
     )
 
-    world = '/home/osc/robot_ws/src/aws-robomaker-small-warehouse-world/worlds/no_roof_small_warehouse/no_roof_small_warehouse.world'
+    world = 'your/path/aws-robomaker-small-warehouse-world/worlds/no_roof_small_warehouse/no_roof_small_warehouse.world'
 
 
     gzserver_cmd = IncludeLaunchDescription(
