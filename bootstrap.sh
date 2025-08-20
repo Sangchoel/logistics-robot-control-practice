@@ -36,20 +36,4 @@ echo "[7/8] 시스템 의존 자동 설치(rosdep)"
 rosdep install --from-paths src --rosdistro humble -y --ignore-src
 
 echo "[8/8] 빌드(colcon)"
-colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
-
-cat <<EOM
-
-=== 설치 완료 ===
-매 터미널에서:
-  source /opt/ros/humble/setup.bash
-  source $WS/install/setup.bash
-
-실행 예:
-  ros2 launch tb3_multi_robot gazebo_multi_world.launch.py
-  # 또는
-  # ros2 launch tb3_multi_robot gazebo_multi_nav2_world.launch.py
-
-문제 시:
-  rm -rf $WS/{build,install,log} && $REPO_DIR/build.sh
-EOM
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
