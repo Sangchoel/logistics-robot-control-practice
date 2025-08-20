@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ROS2 플릿 매니저 (Python) — 동작 가능한 베이스라인 (+ 자동 드롭오프 범위 모드)
+ROS2 테스크 매니저 (Python) — 동작 가능한 베이스라인 (+ 자동 드롭오프 범위 모드)
 ==========================================================================
 
 여러 대의 Nav2 로봇(TurtleBot3 등)을 중앙에서 제어하기 위한 동작 가능한 참고 구현입니다.
@@ -36,7 +36,7 @@ from geometry_msgs.msg import PoseStamped, Point, Quaternion
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from nav2_msgs.action import NavigateToPose
 from action_msgs.msg import GoalStatus
-from std_srvs.srv import SetBool  # 토글 서비스
+from std_srvs.srv import SetBool 
 
 
 # ------------------------------
@@ -58,12 +58,12 @@ class Task:
     deadline_sec: Optional[float] = None
     created_ts: float = field(default_factory=lambda: time.time())
 
-    # 드롭오프 연쇄 제어용 표시(전략 로직은 그대로 유지)
+    # 드롭오프 연쇄 제어용 표시
     is_delivery: bool = False                 # 드롭오프(내림) 태스크 여부
-    preferred_robot: Optional[str] = None     # 이 로봇이 처리하길 선호(같은 로봇 이어서 처리)
+    preferred_robot: Optional[str] = None     # 같은 로봇 이어서 처리
 
     def __post_init__(self):
-        # 간단한 우선순위 큐: (-priority, 생성시간)
+        # pq: (-priority, 생성시간)
         self.sort_index = (-self.priority, self.created_ts)
 
     def to_pose_stamped(self, frame_id: str = "map") -> PoseStamped:
@@ -107,7 +107,7 @@ class RobotAgent(Node):
         self.ns = ns
         self.state = RobotState(ns=ns)
 
-        # AMCL 포즈 구독(QoS: RELIABLE, KEEP_LAST=10)
+        # AMCL 포즈 구독
         qos = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
             history=HistoryPolicy.KEEP_LAST,
@@ -208,7 +208,7 @@ class RobotAgent(Node):
 
 
 # ------------------------------
-# 작업 할당 전략 (베이스라인: 단순 idle-first; 교육용 그대로 유지)
+# 작업 할당 전략 (베이스라인: 단순 idle-first)
 # ------------------------------
 class Allocation:
     def __init__(self, nominal_speed: float = 0.25):
@@ -225,7 +225,7 @@ class Allocation:
 
 
 # ------------------------------
-# 플릿 매니저 노드
+# 매니저 노드
 # ------------------------------
 class TaskManager(Node):
     def __init__(self):
@@ -234,15 +234,15 @@ class TaskManager(Node):
         # 기본 파라미터
         self.declare_parameter("robot_namespaces", ["tb1", "tb3"])
         self.declare_parameter("nominal_speed_mps", 0.25)
-        self.declare_parameter("stuck_timeout_sec", 20.0)
-        self.declare_parameter("goal_timeout_sec", 180.0)
+        self.declare_parameter("stuck_timeout_sec", 20.0) # 걸림 타임아웃
+        self.declare_parameter("goal_timeout_sec", 180.0) # 도달 실패 타임아웃
         self.declare_parameter("coordination_radius_m", 0.8)
         self.declare_parameter("required_sites_yaml", "")
         self.declare_parameter("dry_run", False)
 
         # 자동 드롭오프 (토글 + 모드/파라미터)
         self.declare_parameter("auto_deliver_enabled", False)
-        self.declare_parameter("dropoff_mode", "point")  # point | circle | rect
+        self.declare_parameter("dropoff_mode", "rect")  # point | circle | rect
 
         # point 모드
         self.declare_parameter("dropoff_x", 0.0)
@@ -306,7 +306,7 @@ class TaskManager(Node):
         for ns in ns_list:
             self.robots.append(RobotAgent(ns))
 
-        # 신규 작업 입력 토픽(선택사항): /fleet/new_task
+        # 동작중 작업 끼워넣기 가능
         qos = QoSProfile(depth=10)
         self.new_task_sub = self.create_subscription(
             PoseStamped,
@@ -378,12 +378,13 @@ class TaskManager(Node):
         self._t0 = 0.0
 
     # ------------------ 입력/로딩 ------------------
+    # 작업 끼워넣기 
     def _on_new_task(self, msg: PoseStamped):
         yaw = quat_to_yaw(msg.pose.orientation)
         t = Task(id=f"task_{int(time.time()*1000)}", x=msg.pose.position.x, y=msg.pose.position.y, yaw_rad=yaw)
         self.task_queue.append(t)
         self.get_logger().info(f"Enqueued new task {t.id} at ({t.x:.2f},{t.y:.2f})")
-
+    #작업 위치 로딩
     def _load_required_sites(self, path: str) -> List[Task]:
         if not path:
             return []
@@ -407,7 +408,7 @@ class TaskManager(Node):
             self.get_logger().error(f"Failed to load required sites: {e}")
             return []
 
-    # ------------------ 디스패처 ------------------
+    # ------------------ 디스패처 ------------------큐 맨 앞 작업을 어느 로봇에 보낼지 allocation을 포함하는 상위
     def _dispatch_loop(self):
         if not self.task_queue:
             return
@@ -426,10 +427,11 @@ class TaskManager(Node):
             # 선호 로봇이 바쁘면 이번 주기는 대기
             return
 
-        # 평소처럼 기존 할당기 사용
+        # 기존 할당기 사용
         rob = self.allocator.pick(self.robots, task)
         if rob is None:
             return
+        #충돌 충돌 휴리스틱 등
         if self._will_conflict(rob, task):
             return
 
@@ -440,7 +442,7 @@ class TaskManager(Node):
     def _send_goal_via_callbacks(self, rob: RobotAgent, task: Task, goal: PoseStamped):
         if not self._run_started:
             self._start_run()
-
+        #gazebo 작동 없이 코드 테스트 용
         if self.dry_run:
             self.get_logger().info(
                 f"[{rob.ns}] (DRY-RUN) would send goal → x={goal.pose.position.x:.2f}, y={goal.pose.position.y:.2f}"
@@ -469,7 +471,7 @@ class TaskManager(Node):
         goal_msg.pose = goal
 
         send_future = rob._nav_client.send_goal_async(goal_msg, feedback_callback=rob._feedback_cb)
-
+        # 골 전송 응답 처리
         def _goal_response_cb(fut):
             try:
                 goal_handle = fut.result()
@@ -492,7 +494,7 @@ class TaskManager(Node):
             res_future.add_done_callback(lambda rf: self._on_result_cb(rf, rob, task))
 
         send_future.add_done_callback(_goal_response_cb)
-
+        #결과 처리
     def _on_result_cb(self, result_future, rob: RobotAgent, task: Task):
         try:
             result = result_future.result()
@@ -661,7 +663,7 @@ def quat_to_yaw(q: Quaternion) -> float:
     t3 = 2.0 * (q.w * q.z)
     t4 = 1.0 - 2.0 * (q.z * q.z)
     return math.atan2(t3, t4)
-
+#거리 계산기
 def dist_xy(a: Point, b: Point) -> float:
     return math.hypot(a.x - b.x, a.y - b.y)
 
@@ -690,7 +692,7 @@ def local_to_world(lx: float, ly: float, cx: float, cy: float, yaw: float) -> Tu
 
 
 # ------------------------------
-# 엔트리 포인트
+# 진입 포인트
 # ------------------------------
 def main(args=None):
     rclpy.init(args=args)

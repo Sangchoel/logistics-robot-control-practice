@@ -112,7 +112,7 @@ def generate_launch_description():
 	    executable='map_server',
 	    name='map_server',
 	    output='screen',
-	    parameters=[{'yaml_filename': '/home/osc/robot_ws/src/aws-robomaker-small-warehouse-world/maps/002/map.yaml'}],
+	    parameters=[{'yaml_filename': '/your/path/logistics-robot-control-practice/src/aws-robomaker-small-warehouse-world/maps/002/map.yaml'}],
 	    remappings=remappings)
 
 
