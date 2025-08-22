@@ -3,11 +3,34 @@
 ROS 2 Humble + Gazebo Classic 11 기반 다중 로봇 제어 실습 환경 
 
 ## 0) 사전 준비
-- Ubuntu 22.04 + ROS 2 Humble 설치
-- Gazebo Classic 11
-- NVIDIA 그래픽 드라이버 
-- git-lfs 설치 (부트스트랩에서도 설치하지만, 이미 클론했다면 git lfs pull 필수)
+Ubuntu 22.04 + ROS 2 Humble + Gazebo Classic 11 환경에서 아래를 **먼저 설치**하세요.
 
+```bash
+sudo apt update
+# 필수 개발도구
+sudo apt install -y git git-lfs curl \
+  python3-vcstool python3-colcon-common-extensions python3-rosdep
+
+# Gazebo 본체 + ROS 연동
+sudo apt install -y gazebo libgazebo-dev \
+  ros-humble-gazebo-ros-pkgs ros-humble-gazebo-plugins
+
+# TurtleBot3 패키지(모델/가제보 시뮬)
+sudo apt install -y "ros-humble-turtlebot3*"
+
+# (선택) Nav2 / Cartographer를 쓰면 함께 설치
+sudo apt install -y ros-humble-navigation2 ros-humble-nav2-bringup \
+  ros-humble-cartographer ros-humble-cartographer-ros
+
+# git-lfs 1회 초기화
+git lfs install
+
+# rosdep 1회 초기화(이미 했다면 건너뜀)
+if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
+  sudo rosdep init
+fi
+rosdep update
+```
 ## 1. 클론 & 빌드
 
 ```bash
