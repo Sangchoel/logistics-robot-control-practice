@@ -1,12 +1,13 @@
 # Logistics Robot Control Practice
 
-ROS 2 Humble + Gazebo Classic 11 기반 다중 로봇 제어 실습 환경 
+ROS 2 Humble + Gazebo Classic 11 기반 다중 로봇 제어 실습 환경
 
-## 0) 사전 준비
-Ubuntu 22.04 + ROS 2 Humble + Gazebo Classic 11 환경에서 아래를 **먼저 설치**하세요.
+## 0) 사전 준비 
+Ubuntu 22.04 + ROS 2 Humble + Gazebo Classic 11 환경에서 아래를 먼저 설치하세요.
 
 ```bash
 sudo apt update
+
 # 필수 개발도구
 sudo apt install -y git git-lfs curl \
   python3-vcstool python3-colcon-common-extensions python3-rosdep
@@ -18,7 +19,7 @@ sudo apt install -y gazebo libgazebo-dev \
 # TurtleBot3 패키지(모델/가제보 시뮬)
 sudo apt install -y "ros-humble-turtlebot3*"
 
-# (선택) Nav2 / Cartographer를 쓰면 함께 설치
+# (선택) Nav2 / Cartographer
 sudo apt install -y ros-humble-navigation2 ros-humble-nav2-bringup \
   ros-humble-cartographer ros-humble-cartographer-ros
 
@@ -36,7 +37,7 @@ rosdep update
 ```bash
 git clone https://github.com/Sangchoel/logistics-robot-control-practice.git
 cd logistics-robot-control-practice
-./bootstrap.sh # rosdep 설치, colcon 빌드, 환경설정 등 자동화
+./bootstrap.sh 
 ```
 
 
